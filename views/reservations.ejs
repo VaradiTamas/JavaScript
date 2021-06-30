@@ -1,0 +1,52 @@
+<%- include('header') -%>
+<%- include('menu', {active: 'foglalas'}) -%>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Mettol</th>
+        <th scope="col">Meddig</th>
+        <th scope="col">Nev</th>
+        <th scope="col">E-mail cim</th>
+        <th scope="col">Telefonszam</th>
+        <th scope="col">Szoba</th>
+        <th scope="col">Szerkesztes</th>
+    </tr>
+    </thead>
+    <tbody>
+        <% reservations.forEach(function(reservation){ %>
+            <tr>
+                <td>
+                    <%= reservation.from %>
+                </td>
+                <td>
+                    <%= reservation.to %>
+                </td>
+                <td>
+                    <%= reservation.lastName %>
+                    <%= reservation.firstName %>
+                </td>
+                <td>
+                    <%= reservation.email %>
+                </td>
+                <td>
+                    <%= reservation.tel %>
+                </td>
+                <% rooms.forEach(function(room){ %>
+                    <% if (reservation._room == room.id) { %>
+                        <td>
+                            <%= room.name %>
+                        </td>
+                    <% } %>
+                <% }); %>
+                <td>
+                    <a class="btn btn-primary far fa-edit me-1" href="/admin/reservations/edit/<%= reservation._id %>"></a>
+                    <a class="btn btn-danger far fa-trash-alt" href="/admin/reservations/delete/<%= reservation._id %>"></a>
+                </td>
+            </tr>
+        <% }); %>
+    </tbody>
+</table>
+<a class="ms-4 mt-5 btn btn-success" href="/admin/reservations/new">Új foglalás hozzáadása</a>
+
+<%- include('footer') -%>

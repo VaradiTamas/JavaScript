@@ -1,0 +1,71 @@
+<%- include('header') -%>
+<h1 class="m-4">Kerem, valassza ki a megfelelo szobatipust...</h1>
+
+<form method="POST">
+    <div class="container">
+        <div class="row">
+            <% rooms.forEach(function(room){ %>
+                <div class="col-4 mb-4">
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <%=room.name%>
+                            </h5>
+                        </div>
+                        <img src="room_pic.jpg" class="card-img-top">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="_room" id="room" value="<%=room.id%>">
+                                            <label class="form-check-label" for="room">
+                                                Lefoglalom
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 ps-5 pe-0">
+                                        <span>2</span>
+                                        <img src="person-fill.svg" alt="Bootstrap" width="32" height="32">
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+
+    <div class="row mb-3 ps-3 mt-3">
+        <label for="firstName" class="col-1">Vezeteknev: </label>
+        <div class="col-6">
+            <input type="text" class="form-control" id="firstName" name="firstName" required>
+        </div>
+    </div>
+    <div class="row mb-5 ps-3">
+        <label for="lastName" class="col-1">Keresztnev: </label>
+        <div class="col-6">
+            <input type="text" class="form-control" id="lastName" name="lastName" required>
+        </div>
+    </div>
+
+    <div class="mb-3 mt-5 ps-3 col-4">
+        <label for="email" class="form-label me-3">E-mail cim:</label>
+        <input type="email" class="form-control" id="email" placeholder="example@example.com" name="email" required>
+    </div>
+    <div class="mb-3 mt-3 ps-3 col-4">
+        <label for="tel" class="form-label me-3">Telefonszam:</label>
+        <input type="number" class="form-control" id="tel" placeholder="06201234567" name="tel" required>
+    </div>
+    <div class="row">
+        <div class="col-6 m-3">
+            <a class="ms-4 mt-5 btn btn-secondary" href="/booking1">Vissza</a>
+        </div>
+        <div class="col-2 m-3">
+            <input type="submit" class="ms-4 mt-5 btn btn-success" value="Foglalás megerősítése"/>
+        </div>
+    </div>
+</form>
+
+<%- include('footer') -%>

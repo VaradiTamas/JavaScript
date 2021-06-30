@@ -1,0 +1,97 @@
+szobák és foglalások
+
+index.html                  - erkezes, tavozas, emberek szama
+available_rooms.html        - elerheto szobak, hany fosek, foglalas gomb
+personal_info.html          - vezetek, keresztnev, email, tel, foglalas megerositese gomb
+admin.html                  - email, passwd, sign in gomb
+
+reservations.html           - lista a foglalasokrol, szerkesztes, torles ikon, uj foglalas hozzaadasa gomb
+modify-reservation.html     - minden adat amit modositani lehet, mentes, megsem gombok
+add-reservation.html        - minden adat amit modositani lehet, mentes, megsem gombok
+rooms.html                  - szobak listaja, uj szoba gomb
+add-room.html               - szoba neve, ferohely, mentes,megsem gombok
+
+Routing
+
+GET /
+    startReservationProcessMW
+
+GET, POST /reservation-process
+    setDataMW(a req.body adatokat elment a res.localsba)
+    firstPhaseMW(ha res.localsban nincs datum és személyek szama akkor index.html-re (res.locals.page = 'index.html') egyébként nextet hív)
+    secondPhaseMW(ha a res.localsban a dátumok és az emberek száma meg van adva akkor res.locals.page = 'available_rooms.html' egyébként nextet hív)
+    thirdPhase(ha a res.localsban meg van adva a szabad szoba száma is akkor res.locals.page = 'personal_info.html' egyébként nextet hív
+    saveReservationProcess(ha a res.localsban benne van minden adat akkor elmenti a foglalást és törli az adatokat majd res.locals.page = 'index.html')
+    getAvailableRoomsMW(res.locals alapján az elérhető szobákat vissza tudja adni, ha nincs a res.localsban dátum akkor nextet hív)
+    renderMW(res.locals.page)
+
+GET /admin/?hiba=wrongpasswd
+    handleWrongPassMW (get paramétert néz - templatebe változó lerak)
+    renderMW(admin.html)
+POST /admin/login
+    checkPassMW (jelszó ellenőrzés, ha ok admin/reservationsra rediricet)
+
+GET admin/reservations
+    authMW
+    getRoomsMW
+    getReservationsMW
+    renderMW(reservations.html)
+
+GET, POST /admin/reservations/edit/id
+    authMW
+    getReservationMW
+    updateReservationMW
+    renderMW(modify-reservation.html)
+
+GET, POST /admin/reservations/new
+    authMW
+    saveReservationMW
+        if(typeof req.body.name === 'undefined'){
+            return next();
+        }
+        res.redirect('/admin/reservations');
+        res.locals
+        next();
+    renderMW(add-reservation.html)
+
+GET /admin/reservations/delete/id
+    authMW
+    getReservationMW
+        db("...", function(result){
+            if(result.length===0)
+                return res.redirect('/admin/reservations')
+            res.locals.reservation = result[0];
+            next();
+        }
+    deleteReservationMW()
+        res.locals.reservation.delete();
+        res.redirect('/admin/reservations');
+
+GET /admin/rooms
+    authMW
+    getRoomsMW
+    renderMW(rooms.html)
+
+GET, POST /admin/rooms/new
+    authMW
+    saveRoomMW
+            if(typeof req.body.name === 'undefined'){
+                return next();
+            }
+            res.redirect('/admin/rooms');
+            res.locals
+            next();
+    renderMW(add-room.html)
+
+GET /admin/rooms/delete/id
+    authMW
+    getRoomMW
+            db("...", function(result){
+                if(result.length===0)
+                    return res.redirect('/admin/rooms')
+                res.locals.room = result[0];
+                next();
+            }
+    deleteRoomMW()
+        res.locals.room.delete();
+        res.redirect('/admin/reservations');

@@ -1,0 +1,24 @@
+<%- include('header') -%>
+<%- include('menu', {active: 'szoba'}) -%>
+
+<table class="table ms-4">
+    <thead>
+    <tr>
+        <th scope="col">Nev</th>
+        <th scope="col">Ferohely</th>
+    </tr>
+    </thead>
+    <tbody>
+        <% rooms.forEach(function(room){ %>
+            <tr>
+                <td><%=room.name%></td>
+                <td><%=room.capacity%> fo</td>
+                <td><a class="btn btn-danger ms-5 far fa-trash-alt" href="/admin/rooms/delete/<%= room._id %>"></a></td>
+            </tr>
+        <% }); %>
+    </tbody>
+</table>
+
+<a class="ms-4 mt-5 btn btn-success" href="/admin/rooms/new">Új szoba hozzáadása</a>
+
+<%- include('footer') -%>
